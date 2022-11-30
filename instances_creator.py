@@ -3,7 +3,7 @@ import common
 import time
 
 
-class EC2Creator:
+class InstancesCreator:
     """Responsible for creating the instances required for the Final Project
     """
 

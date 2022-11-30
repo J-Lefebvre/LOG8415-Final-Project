@@ -1,6 +1,6 @@
-from EC2_instances_creator import EC2Creator
+from instances_creator import InstancesCreator
 
-ec2 = EC2Creator()
+ec2 = InstancesCreator()
 
 print('Creating instances...')
 Instances = ec2.create_instances()
