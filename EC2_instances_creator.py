@@ -94,15 +94,14 @@ class EC2Creator:
             Instances[f"slave-{instance}"]["instance"] = self.create_instance(
                 common.US_EAST_1A, common.T2_MICRO)
 
-        # Wait for instances to be running
-        time.sleep(60)
-
         # Retrieve and store instances information
         for instance_key in Instances:
-            Instances[instance_key]["private-dns"] = Instances[instance_key]["instance"]["PrivateDnsName"]
-
             id = Instances[instance_key]["instance"]["InstanceId"]
-            print(id)
+            Instances[instance_key]["id"] = id
+
+            self.wait_for_instance(id)
+
+            Instances[instance_key]["private-dns"] = Instances[instance_key]["instance"]["PrivateDnsName"]
 
             reservations = self.client.describe_instances(
                 InstanceIds=[id]).get("Reservations")
@@ -116,3 +115,24 @@ class EC2Creator:
             Instances[instance_key]["ipv4"] = public_ip
 
         return Instances
+
+    def wait_for_instance(self, id):
+        """Sleeps until the instance with the provided id is running (60s timeout)
+
+        Args:
+            id (_type_): id of the instance to wait on
+        """
+        counter = 0
+        while True:
+            response = self.client.describe_instance_status(
+                InstanceIds=[id])
+            counter += 1
+            try:
+                status = response["InstanceStatuses"][0]["InstanceState"]["Name"]
+                if status == "running":
+                    break
+            except:
+                pass
+            if counter > 11:
+                break
+            time.sleep(5)
