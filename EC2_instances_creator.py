@@ -1,18 +1,28 @@
-import json
-import string
 import boto3
 import common
 import time
 
 
 class EC2Creator:
+    """Responsible for creating the instances required for the Final Project
+    """
+
     def __init__(self):
+        """Initializes the boto3 client
+        """
         self.client = boto3.client('ec2')
         self.open_http_port()
-        self.instance_id = None
 
-    # Runs a request to create an instance from parameters and saves their ids
     def create_instance(self, availability_zone, instance_type):
+        """Runs a request to create an instance from parameters
+
+        Args:
+            availability_zone (string): AWS Availability Zone
+            instance_type (string): AWS Instance Type
+
+        Returns:
+            dict: instance resources
+        """
         response = self.client.run_instances(
             BlockDeviceMappings=[
                 {
@@ -54,13 +64,15 @@ class EC2Creator:
         time.sleep(5)
         return response["Instances"][0]
 
-    # Termination function that terminates the running instance
     def terminate_instance(self):
+        """Termination function that terminates the running instance
+        """
         self.client.terminate_instances(InstanceIds=[self.instance_id])
 
-    # If not done already, opens the port 80 on the default security group so
-    #  the ports of all instances and they are exposed by default on creation
     def open_http_port(self):
+        """Opens the port 80 on the default security group so
+           the ports of all instances are exposed by default on creation
+        """
         # Gets all open ports on the default group
         opened_ports = [i_protocol.get('FromPort') for i_protocol in
                         self.client.describe_security_groups(
@@ -77,6 +89,24 @@ class EC2Creator:
             )
 
     def create_instances(self):
+        """Creates the instances required for the final project
+
+        Returns:
+            dict: contains information on the instances as follows :
+            {
+            "stand-alone": {
+                "instance": {...}
+                "id": "i-085c88c0f0d66e1c9"
+                "private-dns": "ip-172-31-35-29.ec2.internal"
+                "public-dns": "ec2-18-206-201-84.compute-1.amazonaws.com"
+                "ipv4": "18.206.201.84"
+            }
+            "master": {...}
+            "slave-1": {...}
+            "slave-2": {...}
+            "slave-3": {...}
+            }
+        """
         Instances = {
             "stand-alone": {},
             "master": {},
@@ -120,7 +150,7 @@ class EC2Creator:
         """Sleeps until the instance with the provided id is running (60s timeout)
 
         Args:
-            id (_type_): id of the instance to wait on
+            id (string): id of the instance to wait on
         """
         counter = 0
         while True:
