@@ -13,7 +13,7 @@ class EC2Creator:
         self.client = boto3.client('ec2')
         self.open_http_port()
 
-    def create_instance(self, availability_zone, instance_type):
+    def create_instance(self, availability_zone, instance_type, script):
         """Runs a request to create an instance from parameters
 
         Args:
@@ -58,7 +58,7 @@ class EC2Creator:
             MinCount=1,
 
             # Script to launch on instance startup
-            # UserData=open('launch_script.sh').read()
+            UserData=open(script).read()
         )
         print(response["Instances"][0]["InstanceId"])
         time.sleep(5)
@@ -117,12 +117,12 @@ class EC2Creator:
 
         # Create instances
         Instances["stand-alone"]["instance"] = self.create_instance(
-            common.US_EAST_1A, common.T2_MICRO)
+            common.US_EAST_1A, common.T2_MICRO, common.STAND_ALONE_SCRIPT)
         Instances["master"]["instance"] = self.create_instance(
-            common.US_EAST_1A, common.T2_MICRO)
+            common.US_EAST_1A, common.T2_MICRO, common.MASTER_SCRIPT)
         for instance in range(1, 4):
             Instances[f"slave-{instance}"]["instance"] = self.create_instance(
-                common.US_EAST_1A, common.T2_MICRO)
+                common.US_EAST_1A, common.T2_MICRO, common.SLAVE_SCRIPT)
 
         # Retrieve and store instances information
         for instance_key in Instances:

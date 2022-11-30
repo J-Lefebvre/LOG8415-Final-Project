@@ -8,3 +8,8 @@ DEFAULT_SECURITY_GROUP_NAME = "default"
 CIDR_IP = "0.0.0.0/0"
 HTTP_PORT = 80
 IP_PROTOCOL = "tcp"
+
+# Scripts
+STAND_ALONE_SCRIPT = "scripts/stand_alone.sh"
+MASTER_SCRIPT = "scripts/master.sh"
+SLAVE_SCRIPT = "scripts/slave.sh"
