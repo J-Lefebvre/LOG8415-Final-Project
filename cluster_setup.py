@@ -86,5 +86,15 @@ class ClusterSetup:
             'sudo /opt/mysqlcluster/home/mysqlc/scripts/mysql_install_db --basedir=/opt/mysqlcluster/home/mysqlc --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data'
             'sudo /opt/mysqlcluster/home/mysqlc/bin/ndb_mgmd -f /opt/mysqlcluster/deploy/conf/config.ini --initial --configdir=/opt/mysqlcluster/deploy/conf/'
         ]
+    def start_slaves(self):
+        """Start MySQL on each slave node and links them to the master node
+        """
+        START_SLAVES = [
+            'mkdir -p /opt/mysqlcluster/deploy/ndb_data',
+            f'/opt/mysqlcluster/home/mysqlc/bin/ndbd -c {self.instances["master"]["public-dns"]}'
+        ]
+        for i in range(1, 4):
+            self.ssh_execute(
+                self.instances[f"slave-{i}"]["public-dns"], START_SLAVES)
 
         self.ssh_execute(self.instances["master"]["public-dns"], SETUP_MASTER)
