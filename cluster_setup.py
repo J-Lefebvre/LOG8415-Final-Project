@@ -1,3 +1,4 @@
+import time
 import paramiko
 
 
@@ -31,11 +32,22 @@ class ClusterSetup:
         for command in commands:
             stdin, stdout, stderr = self.ssh.exec_command(command)
 
-        # Print instance standard output
-        while True:
-            print(stdout.readline())
-            if stdout.channel.exit_status_ready():
-                break
+            # Print instance standard output
+            while True:
+                print(stdout.readline())
+                if stdout.channel.exit_status_ready():
+                    break
+
+    def start_cluster(self):
+        """_summary_
+        """
+        self.setup_master()
+        time.sleep(15)
+        self.start_slaves()
+        time.sleep(15)
+        self.start_master()
+        time.sleep(200)
+        self.use_sakila_master()
 
     def setup_master(self):
         """_summary_
