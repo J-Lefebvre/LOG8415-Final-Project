@@ -86,6 +86,8 @@ class ClusterSetup:
             'sudo /opt/mysqlcluster/home/mysqlc/scripts/mysql_install_db --basedir=/opt/mysqlcluster/home/mysqlc --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data'
             'sudo /opt/mysqlcluster/home/mysqlc/bin/ndb_mgmd -f /opt/mysqlcluster/deploy/conf/config.ini --initial --configdir=/opt/mysqlcluster/deploy/conf/'
         ]
+        self.ssh_execute(self.instances["master"]["public-dns"], SETUP_MASTER)
+
     def start_slaves(self):
         """Start MySQL on each slave node and links them to the master node
         """
@@ -105,3 +107,23 @@ class ClusterSetup:
         ]
         self.ssh_execute(
             self.instances["master"]["public-dns"], START_MASTER)
+
+    def use_sakila_master(self):
+        """Creates a User, installs Sakila, adds it to MySQL and starts using Sakila.
+        """
+        SAKILA_MASTER = [
+            # Create User
+            '''sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -e "CREATE USER 'myapp'@'%' IDENTIFIED BY 'testpwd';GRANT ALL PRIVILEGES ON * . * TO 'myapp'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;"''',
+            '''sudo /opt/mysqlcluster/home/mysqlc/bin/mysql -e "USE mysql; UPDATE user SET plugin='mysql_native_password' WHERE User='root'; FLUSH PRIVILEGES;SET PASSWORD FOR 'root'@'localhost' = PASSWORD('password');"''',
+
+            # Install Sakila
+            'wget https://downloads.mysql.com/docs/sakila-db.tar.gz',
+            'tar -xvf sakila-db.tar.gz',
+
+            # Add Sakila onto MySQL and use Sakila
+            '''/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -e "SOURCE sakila-db/sakila-schema.sql;" -u root -ppassword''',
+            '''/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -e "SOURCE sakila-db/sakila-data.sql;" -u root -ppassword''',
+            '''/opt/mysqlcluster/home/mysqlc/bin/mysql -h 127.0.0.1 -e "USE sakila;" -u root -ppassword'''
+        ]
+        self.ssh_execute(
+            self.instances["master"]["public-dns"], SAKILA_MASTER)
