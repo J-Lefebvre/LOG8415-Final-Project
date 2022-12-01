@@ -13,8 +13,9 @@ class ClusterSetup:
         """
         self.instances = instances
         self.ssh = paramiko.SSHClient()
+        self.ssh.load_system_host_keys()
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.key = paramiko.RSAKey.from_private_key_file("key.pem")
+        self.key = paramiko.RSAKey.from_private_key_file("labsuser.pem")
 
     def ssh_execute(self, dns, commands):
         """_summary_
