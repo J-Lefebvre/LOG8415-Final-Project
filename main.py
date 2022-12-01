@@ -1,17 +1,21 @@
 from instances_creator import InstancesCreator
+from cluster_setup import ClusterSetup
 
 ec2 = InstancesCreator()
 
 print('Creating instances...')
-Instances = ec2.create_instances()
+instances = ec2.create_instances()
 print('Instance created.')
 
-for instance in Instances:
+for instance in instances:
     print(instance)
-    print(f"\tid: {Instances[instance]['id']}")
-    print(f"\tprivate-dns: {Instances[instance]['private-dns']}")
-    print(f"\tpublic-dns: {Instances[instance]['public-dns']}")
-    print(f"\tipv4: {Instances[instance]['ipv4']}")
+    print(f"\tid: {instances[instance]['id']}")
+    print(f"\tprivate-dns: {instances[instance]['private-dns']}")
+    print(f"\tpublic-dns: {instances[instance]['public-dns']}")
+    print(f"\tipv4: {instances[instance]['ipv4']}")
+
+cs = ClusterSetup(instances)
+cs.start_cluster()
 
 # Terminate services
 # ec2.terminate_instance()
