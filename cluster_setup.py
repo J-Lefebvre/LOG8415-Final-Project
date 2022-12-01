@@ -97,4 +97,11 @@ class ClusterSetup:
             self.ssh_execute(
                 self.instances[f"slave-{i}"]["public-dns"], START_SLAVES)
 
-        self.ssh_execute(self.instances["master"]["public-dns"], SETUP_MASTER)
+    def start_master(self):
+        """Start MySQL on the master node
+        """
+        START_MASTER = [
+            '/opt/mysqlcluster/home/mysqlc/bin/mysqld --defaults-file=/opt/mysqlcluster/deploy/conf/my.cnf --user=root &'
+        ]
+        self.ssh_execute(
+            self.instances["master"]["public-dns"], START_MASTER)
