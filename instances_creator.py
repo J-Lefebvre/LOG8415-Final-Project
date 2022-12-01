@@ -53,6 +53,9 @@ class InstancesCreator:
 
             DisableApiTermination=False,
 
+            # Default key
+            KeyName="vockey",
+
             # One instance
             MaxCount=1,
             MinCount=1,
