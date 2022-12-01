@@ -28,7 +28,8 @@ class ClusterSetup:
         self.ssh.connect(hostname=dns, username="ubuntu", pkey=self.key)
 
         # Execute command on instance and unpack stdin, stdout, stderr
-        stdin, stdout, stderr = self.ssh.exec_command(commands)
+        for command in commands:
+            stdin, stdout, stderr = self.ssh.exec_command(command)
 
         # Print instance standard output
         while True:
