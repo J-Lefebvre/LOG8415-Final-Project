@@ -18,3 +18,6 @@ echo "export PATH=$MYSQLC_HOME/bin:$PATH" >> /etc/profile.d/mysqlc.sh
 # 4. Install libncurses5 on the instance
 source /etc/profile.d/mysqlc.sh
 sudo apt-get update && sudo apt-get -y install libncurses5
+
+# 5. Install sysbench
+sudo apt-get install sysbench
