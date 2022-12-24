@@ -74,9 +74,8 @@ class ClusterSetup:
 port=3306" > /opt/mysqlcluster/deploy/my.cnf''',
 
             # Setup config.ini
-            f'''echo <<EOT >> /opt/mysqlcluster/deploy/config.ini
-            [ndb_mgmd]
-            hostname={self.instances["master"]["public-dns"]}
+            f'''echo "[ndb_mgmd]
+hostname={self.instances["master"]["private-dns"]}
             datadir=/opt/mysqlcluster/deploy/ndb_data
             nodeid=1
 
@@ -85,24 +84,19 @@ port=3306" > /opt/mysqlcluster/deploy/my.cnf''',
             datadir=/opt/mysqlcluster/deploy/ndb_data
 
             [ndbd]
-            hostname={self.instances["slave-1"]["public-dns"]}
+hostname={self.instances["slave-1"]["private-dns"]}
             nodeid=3
 
             [ndbd]
-            hostname={self.instances["slave-2"]["public-dns"]}
+hostname={self.instances["slave-2"]["private-dns"]}
             nodeid=4
 
             [ndbd]
-            hostname={self.instances["slave-3"]["public-dns"]}
+hostname={self.instances["slave-3"]["private-dns"]}
             nodeid=5
 
             [mysqld]
-            nodeid=50"
-            EOT''',
-
-            # Start the master node
-            'sudo /opt/mysqlcluster/home/mysqlc/scripts/mysql_install_db --basedir=/opt/mysqlcluster/home/mysqlc --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data'
-            'sudo /opt/mysqlcluster/home/mysqlc/bin/ndb_mgmd -f /opt/mysqlcluster/deploy/conf/config.ini --initial --configdir=/opt/mysqlcluster/deploy/conf/'
+nodeid=50" > /opt/mysqlcluster/deploy/config.ini'''
         ]
         self.ssh_execute(self.instances["master"]["public-dns"], SETUP_MASTER)
 
