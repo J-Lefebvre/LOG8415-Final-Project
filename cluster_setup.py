@@ -115,7 +115,11 @@ nodeid=50" > /opt/mysqlcluster/deploy/config.ini'''
         """Start MySQL on the master node
         """
         START_MASTER = [
-            '/opt/mysqlcluster/home/mysqlc/bin/mysqld --defaults-file=/opt/mysqlcluster/deploy/conf/my.cnf --user=root &'
+            # Start the master node
+            'cd ../..',
+            '/opt/mysqlcluster/home/mysqlc/scripts/mysql_install_db --basedir=/opt/mysqlcluster/home/mysqlc --no-defaults --datadir=/opt/mysqlcluster/deploy/mysqld_data',
+            '/opt/mysqlcluster/home/mysqlc/bin/ndb_mgmd -f /opt/mysqlcluster/deploy/config.ini --initial --configdir=/opt/mysqlcluster/deploy/conf/',
+            '/opt/mysqlcluster/home/mysqlc/bin/mysqld --defaults-file=/opt/mysqlcluster/deploy/my.cnf --user=root &'
         ]
         self.ssh_execute(
             self.instances["master"]["public-dns"], START_MASTER)
