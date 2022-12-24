@@ -21,4 +21,4 @@ sudo mysql -e "SOURCE sakila-db/sakila-data.sql;"
 sudo mysql -e "USE sakila;"
 
 # 6. Install sysbench
-sudo apt-get install sysbench
+sudo apt-get -y install sysbench

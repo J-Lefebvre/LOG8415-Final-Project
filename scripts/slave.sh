@@ -20,4 +20,4 @@ source /etc/profile.d/mysqlc.sh
 sudo apt-get update && sudo apt-get -y install libncurses5
 
 # 5. Install sysbench
-sudo apt-get install sysbench
+sudo apt-get -y install sysbench
