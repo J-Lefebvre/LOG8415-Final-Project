@@ -68,34 +68,34 @@ class ClusterSetup:
 
             # Setup my.cnf
             '''echo "[mysqld]
-            ndbcluster
-            datadir=/opt/mysqlcluster/deploy/mysqld_data
-            basedir=/opt/mysqlcluster/home/mysqlc
+ndbcluster
+datadir=/opt/mysqlcluster/deploy/mysqld_data
+basedir=/opt/mysqlcluster/home/mysqlc
 port=3306" > /opt/mysqlcluster/deploy/my.cnf''',
 
             # Setup config.ini
             f'''echo "[ndb_mgmd]
 hostname={self.instances["master"]["private-dns"]}
-            datadir=/opt/mysqlcluster/deploy/ndb_data
-            nodeid=1
+datadir=/opt/mysqlcluster/deploy/ndb_data
+nodeid=1
 
-            [ndbd default]
-            noofreplicas=3
-            datadir=/opt/mysqlcluster/deploy/ndb_data
+[ndbd default]
+noofreplicas=3
+datadir=/opt/mysqlcluster/deploy/ndb_data
 
-            [ndbd]
+[ndbd]
 hostname={self.instances["slave-1"]["private-dns"]}
-            nodeid=3
+nodeid=3
 
-            [ndbd]
+[ndbd]
 hostname={self.instances["slave-2"]["private-dns"]}
-            nodeid=4
+nodeid=4
 
-            [ndbd]
+[ndbd]
 hostname={self.instances["slave-3"]["private-dns"]}
-            nodeid=5
+nodeid=5
 
-            [mysqld]
+[mysqld]
 nodeid=50" > /opt/mysqlcluster/deploy/config.ini'''
         ]
         self.ssh_execute(self.instances["master"]["public-dns"], SETUP_MASTER)
