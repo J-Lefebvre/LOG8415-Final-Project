@@ -44,10 +44,13 @@ class ClusterSetup:
     def start_cluster(self):
         """_summary_
         """
+        print("Setting up master...")
         self.setup_master()
         time.sleep(15)
+        print("Starting slaves...")
         self.start_slaves()
         time.sleep(15)
+        print("Starting master...")
         self.start_master()
         time.sleep(200)
         self.use_sakila_master()
