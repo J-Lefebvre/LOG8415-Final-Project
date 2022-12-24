@@ -4,12 +4,13 @@
 
 # 1. Install mysql-server
 sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get install mysql-server
+sudo NEEDRESTART_MODE=a apt-get upgrade -y
+sudo NEEDRESTART_MODE=a apt-get install mysql-server -y
 
 # 2. Install Sakila
 wget https://downloads.mysql.com/docs/sakila-db.tar.gz
-tar -xf sakila-db.tar.gz
+tar -xvf sakila-db.tar.gz
+rm sakila-db.tar.gz
 
 # 3. Create the DB structure
 sudo mysql -e "SOURCE sakila-db/sakila-schema.sql;"
