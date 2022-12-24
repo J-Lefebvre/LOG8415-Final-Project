@@ -67,12 +67,11 @@ class ClusterSetup:
             'mkdir /opt/mysqlcluster/deploy/ndb_data',
 
             # Setup my.cnf
-            '''echo <<EOT >> /opt/mysqlcluster/deploy/my.cnf
+            '''echo "[mysqld]
             ndbcluster
             datadir=/opt/mysqlcluster/deploy/mysqld_data
             basedir=/opt/mysqlcluster/home/mysqlc
-            port=3306
-            EOT''',
+port=3306" > /opt/mysqlcluster/deploy/my.cnf''',
 
             # Setup config.ini
             f'''echo <<EOT >> /opt/mysqlcluster/deploy/config.ini
