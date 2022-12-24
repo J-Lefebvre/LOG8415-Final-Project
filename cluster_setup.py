@@ -156,6 +156,6 @@ nodeid=50" > /opt/mysqlcluster/deploy/config.ini'''
             'sudo sysbench oltp_read_only --mysql-db=sakila --mysql-user=root --mysql-password=password --mysql-socket=\"/var/run/mysqld/mysqld.sock\" cleanup',
         ]
         self.ssh_execute(
-            self.instances["master"]["private-dns"], RUN_BENCHMARK, "benchmark_output_master")
+            self.instances["master"]["public-dns"], RUN_BENCHMARK, "benchmark_output_master")
         self.ssh_execute(
-            self.instances["stand-alone"]["private-dns"], RUN_BENCHMARK, "benchmark_output_standalone")
+            self.instances["stand-alone"]["public-dns"], RUN_BENCHMARK, "benchmark_output_standalone")
