@@ -127,6 +127,8 @@ class InstancesCreator:
             Instances[f"slave-{instance}"]["instance"] = self.create_instance(
                 common.US_EAST_1A, common.T2_MICRO, common.SLAVE_SCRIPT)
 
+        time.sleep(15)
+
         # Retrieve and store instances information
         for instance_key in Instances:
             id = Instances[instance_key]["instance"]["InstanceId"]
