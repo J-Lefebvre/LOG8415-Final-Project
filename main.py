@@ -5,7 +5,7 @@ ec2 = InstancesCreator()
 
 print('Creating instances...')
 instances = ec2.create_instances()
-print('Instance created.')
+print('Instances created.')
 
 for instance in instances:
     print(instance)
@@ -16,6 +16,8 @@ for instance in instances:
 
 cs = ClusterSetup(instances)
 cs.start_cluster()
+
+cs.run_benchmark()
 
 # Terminate services
 # ec2.terminate_instance()

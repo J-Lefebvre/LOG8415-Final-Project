@@ -140,3 +140,19 @@ class ClusterSetup:
         ]
         self.ssh_execute(
             self.instances["master"]["public-dns"], SAKILA_MASTER)
+
+    def run_benchmark(self):
+        """
+        """
+        RUN_BENCHMARK = [
+            # Generate a table to run the benchmarking on
+            'sudo sysbench oltp_read_only --table-size=1000000 --mysql-db=sakila --mysql-user=root --mysql-password=password --mysql-socket=\"/var/run/mysqld/mysqld.sock\" prepare',
+            # Run performance tests
+            'sudo sysbench --histogram oltp_read_only --table-size=1000000 --threads=6 --max-time=60 --max-requests=0 --mysql-db=sakila --mysql-user=root --mysql-password=password --mysql-socket=\"/var/run/mysqld/mysqld.sock\" run',
+            # Drop the benchmarking table
+            'sudo sysbench oltp_read_only --mysql-db=sakila --mysql-user=root --mysql-password=password --mysql-socket=\"/var/run/mysqld/mysqld.sock\" cleanup',
+        ]
+        self.ssh_execute(
+            self.instances["master"]["private-dns"], RUN_BENCHMARK, "benchmark_output_master")
+        self.ssh_execute(
+            self.instances["stand-alone"]["private-dns"], RUN_BENCHMARK, "benchmark_output_standalone")
