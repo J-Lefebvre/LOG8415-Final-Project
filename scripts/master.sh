@@ -9,6 +9,7 @@ sudo chmod -R 777 /opt/mysqlcluster
 # 2. Download and unpack MySQL to /opt/mysqlcluster/home/
 wget http://dev.mysql.com/get/Downloads/MySQL-Cluster-7.2/mysql-cluster-gpl-7.2.1-linux2.6-x86_64.tar.gz -P /opt/mysqlcluster/home/
 tar -xvf /opt/mysqlcluster/home/mysql-cluster-gpl-7.2.1-linux2.6-x86_64.tar.gz -C /opt/mysqlcluster/home/
+ln -s /opt/mysqlcluster/home/mysql-cluster-gpl-7.2.1-linux2.6-x86_64 /opt/mysqlcluster/home/mysqlc
 
 # 3. Add MYSQLC_HOME to PATH
 sudo chmod -R 777 /etc/profile.d
