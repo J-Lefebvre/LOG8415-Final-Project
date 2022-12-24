@@ -18,7 +18,7 @@ class ClusterSetup:
         self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self.key = paramiko.RSAKey.from_private_key_file("labsuser.pem")
 
-    def ssh_execute(self, dns, commands):
+    def ssh_execute(self, dns, commands, output_file=""):
         """_summary_
 
         Args:
@@ -32,11 +32,14 @@ class ClusterSetup:
         for command in commands:
             stdin, stdout, stderr = self.ssh.exec_command(command)
 
-            # Print instance standard output
-            while True:
-                print(stdout.readline())
-                if stdout.channel.exit_status_ready():
-                    break
+            # Save output of the commands to specified filename
+            if output_file != "":
+                output = open(f'{output_file}.txt', 'a+')
+                output.write(" ".join(stdout.readlines()))
+                output.close()
+            else:
+                print(f"{dns} : {command}")
+                print(stdout.readlines())
 
     def start_cluster(self):
         """_summary_
