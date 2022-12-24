@@ -3,14 +3,14 @@ import paramiko
 
 
 class ClusterSetup:
-    """_summary_
+    """Helper class to setup the MySQL Cluster 
     """
 
     def __init__(self, instances):
-        """_summary_
+        """Store instances structure and prepare paramiko (SSH)
 
         Args:
-            instances (_type_): _description_
+            instances: information on instances
         """
         self.instances = instances
         self.ssh = paramiko.SSHClient()
@@ -19,11 +19,11 @@ class ClusterSetup:
         self.key = paramiko.RSAKey.from_private_key_file("labsuser.pem")
 
     def ssh_execute(self, dns, commands, output_file=""):
-        """_summary_
+        """Connect to specified instance using SSH, run provided commands and print output to console (or specified file) 
 
         Args:
-            dns (_type_): _description_
-            commands (_type_): _description_
+            dns: instance to connect to
+            commands: commands to run
         """
         # Connect to instance via SSH
         self.ssh.connect(hostname=dns, username="ubuntu", pkey=self.key)
@@ -42,7 +42,7 @@ class ClusterSetup:
                 print(stdout.readlines())
 
     def start_cluster(self):
-        """_summary_
+        """Entry function to setup the MySQL cluster
         """
         print("Setting up master...")
         self.setup_master()
@@ -56,7 +56,7 @@ class ClusterSetup:
         self.use_sakila_master()
 
     def setup_master(self):
-        """_summary_
+        """Setup of MySQL on the master instance, populating the my.cnf and config.ini files
         """
         SETUP_MASTER = [
             # Prepare directory for MySQL cluster
@@ -145,7 +145,7 @@ nodeid=50" > /opt/mysqlcluster/deploy/config.ini'''
             self.instances["master"]["public-dns"], SAKILA_MASTER)
 
     def run_benchmark(self):
-        """
+        """Benchmarks MySQL stand-alone and the cluster with sysbench 
         """
         RUN_BENCHMARK = [
             # Generate a table to run the benchmarking on
